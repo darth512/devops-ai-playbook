@@ -64,3 +64,20 @@ module "argocd" {
   depends_on = [module.eks]
 }
 
+module "logging" {
+  source = "./modules/logging"
+
+  providers = {
+    kubernetes = kubernetes.eks
+    helm       = helm.eks
+  }
+
+  oidc_provider_arn = module.eks.oidc_provider_arn
+  oidc_issuer_url   = module.eks.oidc_issuer_url
+  cluster_name      = module.eks.cluster_name
+  region            = var.region
+  log_group_name    = "/eks/boutique/pods"
+
+  depends_on = [module.eks]
+}
+
